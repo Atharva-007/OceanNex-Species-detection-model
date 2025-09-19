@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Body</folder>
+	<filename>Catla-Body (12).JPG</filename>
+	<path>C:\Users\akash\FILES\Project\ongoing\sih\RealTimeObjectDetection\Tensorflow\workspace\images\Fish dataset\Catla\Catla\Body\Catla-Body (12).JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>5184</width>
+		<height>3456</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Catla</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>204</xmin>
+			<ymin>879</ymin>
+			<xmax>5056</xmax>
+			<ymax>2531</ymax>
+		</bndbox>
+	</object>
+</annotation>

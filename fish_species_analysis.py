@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-"""
-Fish Species Classification Model
-=================================
-
-This script performs comprehensive analysis of the fish dataset and trains a CNN model
-for image-based fish species classification.
-
-Dataset: FishImgDataset with 31 fish species
-Author: GitHub Copilot
-Date: September 19, 2025
-"""
 
 import os
 import numpy as np
@@ -23,7 +12,18 @@ warnings.filterwarnings('ignore')
 # Deep Learning Libraries
 import tensorflow as tf
 from tensorflow.keras import layers, models, optimizers, callbacks
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+try:
+    # Preferred: TensorFlow's bundled Keras (most common in TF >= 2.x)
+    from tensorflow.keras.preprocessing.image import ImageDataGenerator
+except Exception:
+    try:
+        # Fallback: standalone Keras package
+        from keras.preprocessing.image import ImageDataGenerator  # type: ignore
+    except Exception:
+        raise ImportError(
+            "ImageDataGenerator import failed. Please ensure TensorFlow (or Keras) is installed. "
+            "Install with: pip install tensorflow  # or pip install keras"
+        )
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 import json

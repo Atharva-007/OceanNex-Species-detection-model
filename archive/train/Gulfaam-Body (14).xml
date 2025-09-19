@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Cyprinus carpio</folder>
+	<filename>Gulfaam-Body (14).JPG</filename>
+	<path>C:\Users\akash\FILES\Project\ongoing\sih\RealTimeObjectDetection\Tensorflow\workspace\images\Fish dataset\Cyprinus carpio\Gulfaam-Body (14).JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>5184</width>
+		<height>3456</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Carp</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>234</xmin>
+			<ymin>1539</ymin>
+			<xmax>4782</xmax>
+			<ymax>2994</ymax>
+		</bndbox>
+	</object>
+</annotation>

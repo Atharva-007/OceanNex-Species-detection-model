@@ -1,0 +1,26 @@
+<annotation>
+	<folder>Silver</folder>
+	<filename>Silver-Body (42).JPG</filename>
+	<path>C:\Users\akash\FILES\Project\ongoing\sih\RealTimeObjectDetection\Tensorflow\workspace\images\Fish dataset\Silver\Silver-Body (42).JPG</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>5184</width>
+		<height>3456</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Silver</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>34</xmin>
+			<ymin>765</ymin>
+			<xmax>5075</xmax>
+			<ymax>2350</ymax>
+		</bndbox>
+	</object>
+</annotation>

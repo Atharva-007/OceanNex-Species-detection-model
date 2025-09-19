@@ -1,0 +1,116 @@
+COMPREHENSIVE FISH DATASET ANALYSIS REPORT
+==================================================
+
+Analysis Date: 2025-09-19 02:25:53
+
+OVERVIEW
+--------------------
+Total Datasets Analyzed: 2
+Total Images: 13,428
+Total Unique Species: 35
+
+DATASET DETAILS
+--------------------
+
+FISHIMGDATASET:
+  Type: classification_folders
+  Images: 13301
+  Species: 31
+  Splits: train, val, test
+  Species Distribution:
+    - Bangus: 257 images
+    - Big Head Carp: 307 images
+    - Black Spotted Barb: 303 images
+    - Catfish: 473 images
+    - Climbing Perch: 230 images
+    - Fourfinger Threadfin: 289 images
+    - Freshwater Eel: 410 images
+    - Glass Perchlet: 598 images
+    - Goby: 920 images
+    - Gold Fish: 312 images
+    - Gourami: 471 images
+    - Grass Carp: 1828 images
+    - Green Spotted Puffer: 166 images
+    - Indian Carp: 396 images
+    - Indo-Pacific Tarpon: 282 images
+    - Jaguar Gapote: 345 images
+    - Janitor Fish: 433 images
+    - Knifefish: 483 images
+    - Long-Snouted Pipefish: 389 images
+    - Mosquito Fish: 385 images
+    - Mudfish: 283 images
+    - Mullet: 267 images
+    - Pangasius: 292 images
+    - Perch: 444 images
+    - Scat Fish: 235 images
+    - Silver Barb: 498 images
+    - Silver Carp: 361 images
+    - Silver Perch: 428 images
+    - Snakehead: 351 images
+    - Tenpounder: 420 images
+    - Tilapia: 445 images
+
+ARCHIVE:
+  Type: xml_annotations
+  Images: 127
+  Species: 4
+  Splits: train, test
+  Species Distribution:
+    - Catla: 20 images
+    - Grass: 11 images
+    - Gulfaam: 50 images
+    - Silver: 46 images
+
+FISHESDATASER2:
+  Type: empty
+  Images: 0
+  Species: 0
+
+SPECIES OVERLAP ANALYSIS
+--------------------
+FishImgDataset only: 31 species
+Archive only: 4 species
+Common species: 0 species
+
+RECOMMENDATIONS
+--------------------
+• ℹ️ fishesdataser2 is empty - can be ignored
+• ✅ FishImgDataset has sufficient species diversity for training
+
+ALL SPECIES IDENTIFIED
+--------------------
+ 1. Bangus
+ 2. Big Head Carp
+ 3. Black Spotted Barb
+ 4. Catfish
+ 5. Catla
+ 6. Climbing Perch
+ 7. Fourfinger Threadfin
+ 8. Freshwater Eel
+ 9. Glass Perchlet
+10. Goby
+11. Gold Fish
+12. Gourami
+13. Grass
+14. Grass Carp
+15. Green Spotted Puffer
+16. Gulfaam
+17. Indian Carp
+18. Indo-Pacific Tarpon
+19. Jaguar Gapote
+20. Janitor Fish
+21. Knifefish
+22. Long-Snouted Pipefish
+23. Mosquito Fish
+24. Mudfish
+25. Mullet
+26. Pangasius
+27. Perch
+28. Scat Fish
+29. Silver
+30. Silver Barb
+31. Silver Carp
+32. Silver Perch
+33. Snakehead
+34. Tenpounder
+35. Tilapia
