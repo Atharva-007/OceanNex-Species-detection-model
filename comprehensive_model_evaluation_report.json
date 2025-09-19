@@ -1,0 +1,30 @@
+{
+  "performance_summary": {
+    "demo": {
+      "test_accuracy": 0.2380952388048172,
+      "test_loss": 2.6700704097747803,
+      "total_parameters": 3379299,
+      "avg_precision": 0.2397732426303854,
+      "avg_recall": 0.23809523809523805,
+      "avg_f1_score": 0.20903715332286762,
+      "best_class": "Gold Fish",
+      "best_f1": 1.0,
+      "worst_class": "Big Head Carp",
+      "worst_f1": 0.0,
+      "good_classes_count": 3,
+      "total_classes": 37
+    }
+  },
+  "training_analysis": {
+    "demo": {
+      "epochs_completed": 20,
+      "final_train_acc": 0.3127571940422058,
+      "final_val_acc": 0.2788461446762085,
+      "best_val_acc": 0.2788461446762085,
+      "final_train_loss": 2.415285587310791,
+      "final_val_loss": 2.69475531578064,
+      "min_val_loss": 2.69475531578064,
+      "convergence": "No"
+    }
+  }
+}

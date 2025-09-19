@@ -191,7 +191,9 @@ class UnifiedDatasetPreparer:
         for split in ['train', 'test']:
             split_path = self.archive_dataset / split
             if split_path.exists():
-                for img_file in split_path.glob('*.jpg') + split_path.glob('*.JPG'):
+                jpg_files = list(split_path.glob('*.jpg'))
+                JPG_files = list(split_path.glob('*.JPG'))
+                for img_file in jpg_files + JPG_files:
                     # Extract species name
                     filename = img_file.name
                     if '-' in filename:

@@ -43,15 +43,37 @@ st.set_page_config(
 
 # Global variables
 MODEL = None
-CLASS_NAMES = [
-    'Bangus', 'Big Head Carp', 'Black Spotted Barb', 'Catfish', 'Climbing Perch',
-    'Fourfinger Threadfin', 'Freshwater Eel', 'Glass Perchlet', 'Goby', 'Gold Fish',
-    'Gourami', 'Grass Carp', 'Green Spotted Puffer', 'Indian Carp', 'Indo-Pacific Tarpon',
-    'Jaguar Gapote', 'Janitor Fish', 'Knifefish', 'Long-Snouted Pipefish', 'Mosquito Fish',
-    'Mudfish', 'Mullet', 'Pangasius', 'Perch', 'Scat Fish', 'Silver Barb', 'Silver Carp',
-    'Silver Perch', 'Snakehead', 'Tenpounder', 'Tilapia'
-]
-IMG_SIZE = (224, 224)
+CLASS_NAMES = None
+IMG_SIZE = (96, 96)  # Updated to match demo model
+
+@st.cache_data
+def load_class_mapping():
+    """Load class mapping from JSON file"""
+    try:
+        with open('class_mapping.json', 'r') as f:
+            class_mapping = json.load(f)
+        
+        # Create sorted list of class names by index
+        sorted_classes = sorted(class_mapping.items(), key=lambda x: x[1])
+        class_names = [name for name, idx in sorted_classes]
+        
+        return class_names, class_mapping
+    except FileNotFoundError:
+        st.error("❌ class_mapping.json not found. Using default classes.")
+        # Fallback to original classes
+        default_classes = [
+            'Bangus', 'Big Head Carp', 'Black Spotted Barb', 'Catfish', 'Climbing Perch',
+            'Fourfinger Threadfin', 'Freshwater Eel', 'Glass Perchlet', 'Goby', 'Gold Fish',
+            'Gourami', 'Grass Carp', 'Green Spotted Puffer', 'Indian Carp', 'Indo-Pacific Tarpon',
+            'Jaguar Gapote', 'Janitor Fish', 'Knifefish', 'Long-Snouted Pipefish', 'Mosquito Fish',
+            'Mudfish', 'Mullet', 'Pangasius', 'Perch', 'Scat Fish', 'Silver Barb', 'Silver Carp',
+            'Silver Perch', 'Snakehead', 'Tenpounder', 'Tilapia'
+        ]
+        default_mapping = {name: idx for idx, name in enumerate(default_classes)}
+        return default_classes, default_mapping
+    except Exception as e:
+        st.error(f"❌ Error loading class mapping: {e}")
+        return [], {}
 
 @st.cache_resource
 def load_fish_model():
@@ -60,9 +82,12 @@ def load_fish_model():
         st.error("❌ TensorFlow not installed. Please install with: `pip install tensorflow`")
         return None
     
-    # Look for available models
+    # Look for available models (prioritize demo model)
     model_files = [
-        "fish_species_cnn_final.h5",
+        "demo_fish_classifier.keras",  # Our new demo model
+        "best_fish_classifier_simplified.keras",  # Simplified model
+        "unified_fish_classifier_final.keras",  # Full unified model
+        "fish_species_cnn_final.h5",  # Legacy models
         "best_fish_cnn_model.h5",
         "fish_species_cnn_model.h5"
     ]
@@ -72,12 +97,18 @@ def load_fish_model():
             try:
                 model = load_model(model_file)
                 st.success(f"✅ Model loaded: {model_file}")
+                
+                # Display model info
+                if hasattr(model, 'count_params'):
+                    st.info(f"📊 Model parameters: {model.count_params():,}")
+                
                 return model
             except Exception as e:
-                st.error(f"❌ Error loading {model_file}: {e}")
+                st.warning(f"⚠️ Could not load {model_file}: {e}")
                 continue
     
     st.error("❌ No trained model found! Please train a model first.")
+    st.info("💡 Available model files should include: demo_fish_classifier.keras")
     return None
 
 def preprocess_image(image):
@@ -99,7 +130,7 @@ def preprocess_image(image):
         st.error(f"Error preprocessing image: {e}")
         return None
 
-def predict_fish(model, image, top_k=5):
+def predict_fish(model, image, class_names, top_k=5):
     """Predict fish species from image"""
     # Preprocess image
     img_array = preprocess_image(image)
@@ -116,7 +147,7 @@ def predict_fish(model, image, top_k=5):
         results = []
         for i, idx in enumerate(top_indices):
             confidence = float(predictions[idx])
-            species = CLASS_NAMES[idx] if idx < len(CLASS_NAMES) else f"Unknown_{idx}"
+            species = class_names[idx] if idx < len(class_names) else f"Unknown_{idx}"
             
             results.append({
                 'rank': i + 1,
@@ -167,26 +198,41 @@ def main():
     st.title("🐟 Fish Species Classifier")
     st.markdown("Upload an image to identify fish species using AI")
     
-    # Initialize model
+    # Load class mapping
+    class_names, class_mapping = load_class_mapping()
+    
+    # Initialize model - Load automatically on startup
     global MODEL
+    
+    # Auto-load model if not already loaded
+    if MODEL is None:
+        with st.spinner("🔄 Loading model..."):
+            MODEL = load_fish_model()
     
     # Sidebar with model info
     with st.sidebar:
         st.header("📊 Model Information")
         
-        if st.button("🔄 Load Model"):
-            with st.spinner("Loading model..."):
+        # Manual reload button
+        if st.button("🔄 Reload Model"):
+            with st.spinner("Reloading model..."):
+                st.cache_resource.clear()  # Clear cache
                 MODEL = load_fish_model()
         
         # Display model status
         if MODEL is not None:
             st.success("✅ Model Ready")
-            st.info(f"Classes: {len(CLASS_NAMES)}")
+            st.info(f"Classes: {len(class_names)}")
             st.info(f"Input Size: {IMG_SIZE}")
+            
+            # Show class list in expander
+            with st.expander("🐟 Species List"):
+                for i, species in enumerate(class_names):
+                    st.write(f"{i+1}. {species}")
         else:
-            st.warning("⚠️ Model not loaded")
+            st.error("❌ Model not loaded")
             if TF_AVAILABLE:
-                st.info("Click 'Load Model' to load the trained model")
+                st.warning("Model loading failed. Check if model files exist.")
             else:
                 st.error("TensorFlow not available")
     
@@ -205,7 +251,7 @@ def main():
         if uploaded_file is not None:
             # Display uploaded image
             image = Image.open(uploaded_file)
-            st.image(image, caption="Uploaded Image", use_column_width=True)
+            st.image(image, caption="Uploaded Image", use_container_width=True)
             
             # Image info
             st.info(f"Image size: {image.size}")
@@ -215,41 +261,48 @@ def main():
         st.header("🔬 Prediction Results")
         
         if uploaded_file is not None and MODEL is not None:
-            if st.button("🚀 Classify Fish", type="primary"):
-                with st.spinner("Analyzing image..."):
-                    # Make prediction
-                    prediction_results = predict_fish(MODEL, image)
+            # Automatic classification when image is uploaded
+            with st.spinner("🤖 Analyzing image..."):
+                # Make prediction
+                prediction_results = predict_fish(MODEL, image, class_names)
+                
+                if prediction_results:
+                    # Top prediction
+                    top_pred = prediction_results[0]
+                    st.markdown(f"## **{top_pred['species']}**")
+                    st.metric("Confidence", f"{top_pred['percentage']:.1f}%")
                     
-                    if prediction_results:
-                        # Top prediction
-                        top_pred = prediction_results[0]
-                        st.markdown(f"## **{top_pred['species']}**")
-                        st.metric("Confidence", f"{top_pred['percentage']:.1f}%")
-                        
-                        # All predictions table
-                        st.markdown("### 📊 All Predictions")
-                        predictions_df = pd.DataFrame(prediction_results)
-                        predictions_df['percentage'] = predictions_df['percentage'].round(1)
-                        st.dataframe(predictions_df, hide_index=True)
-                        
-                        # Chart
-                        chart = create_prediction_chart(prediction_results)
-                        if chart:
-                            st.pyplot(chart)
-                        
-                        # Technical details
-                        with st.expander("🔧 Technical Details"):
-                            st.write(f"Max Confidence: {top_pred['confidence']:.4f}")
-                            confidence_values = [r['confidence'] for r in prediction_results]
-                            entropy = -sum(c * np.log(c + 1e-10) for c in confidence_values)
-                            st.write(f"Prediction Entropy: {entropy:.4f}")
-                    else:
-                        st.error("Failed to make prediction")
+                    # All predictions table
+                    st.markdown("### 📊 All Predictions")
+                    predictions_df = pd.DataFrame(prediction_results)
+                    predictions_df['percentage'] = predictions_df['percentage'].round(1)
+                    st.dataframe(predictions_df, hide_index=True)
+                    
+                    # Chart
+                    chart = create_prediction_chart(prediction_results)
+                    if chart:
+                        st.pyplot(chart)
+                    
+                    # Technical details
+                    with st.expander("🔧 Technical Details"):
+                        st.write(f"Max Confidence: {top_pred['confidence']:.4f}")
+                        confidence_values = [r['confidence'] for r in prediction_results]
+                        entropy = -sum(c * np.log(c + 1e-10) for c in confidence_values)
+                        st.write(f"Prediction Entropy: {entropy:.4f}")
+                        st.write(f"Total Species: {len(class_names)}")
+                        st.write(f"Model Input Size: {IMG_SIZE}")
+                else:
+                    st.error("❌ Failed to make prediction")
+                    
+            # Manual reclassify button
+            if st.button("🔄 Reclassify", help="Run prediction again"):
+                st.rerun()
         
         elif uploaded_file is not None and MODEL is None:
-            st.warning("Please load a model first")
+            st.error("❌ Model not loaded")
+            st.info("Please check if model files exist in the project directory")
         else:
-            st.info("Upload an image to see predictions")
+            st.info("📤 Upload a fish image to see AI predictions")
     
     # Footer
     st.markdown("---")
